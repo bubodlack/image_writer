@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -ex
+
+sudo echo "mi imposto come sudo";
+sudo apt install pv;
+
+if [ -z $1 ]; then
+
+	echo "Non hai passato il primo parametro";
+	exit 1;
+fi 
+
+if [ -z $2 ]; then 
+
+	echo "Non hai passato il secondo parametro";
+	exit 1;
+fi
+echo "Faccio il DD";
+sudo dd if=$1 | pv -s $(stat --printf="%s" $1) | sudo dd of=$2;
+echo "Faccio un sync";
+sync; 
+echo "Aspetto";
+wait 1 ;
+echo "Eject di $($2)";
+eject $2;
+echo "FINITO!!!"
